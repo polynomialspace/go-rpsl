@@ -146,7 +146,7 @@ func lexNewline(l *lexer) stateFn {
 			l.discard()
 			l.emit(EOR)
 			return lexStart
-		case ' ', '\t':
+		case ' ', '\t', '+':
 			l.discard()
 			return lexValue
 		default:
