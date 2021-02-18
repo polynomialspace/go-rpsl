@@ -168,7 +168,7 @@ func lexComment(l *lexer) stateFn {
 
 		switch c {
 		case '\n':
-			return lexStart
+			return lexNewline
 		}
 	}
 }
@@ -211,13 +211,16 @@ func lexValue(l *lexer) stateFn {
 			if !started {
 				l.discard()
 			}
-		case '%', '#':
-			l.discard()
-			return lexComment
 		case '\n':
 			l.discard()
 			l.emit(Value)
 			return lexNewline
+		case '%', '#':
+			l.discard()
+			if started {
+				l.emit(Value)
+			}
+			return lexComment
 		default:
 			started = true
 		}

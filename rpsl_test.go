@@ -77,7 +77,21 @@ notify:        Peering@yipes.com
 mnt-by:        MAINT-AS6517
 changed:       dlim@yipes.com 20011011
 source:        LEVEL3
-               #delete:       juhlson@yipes.com no longer yipes customer`
+               #delete:       juhlson@yipes.com no longer yipes customer
+
+inetnum:        80.6.88.112 - 80.6.88.127
+netname:        ASPIRE-HOUSING-LTD
+descr:          NEWCASTLE UNDER LYME HOUSING
+country:        GB
+admin-c:        DUMY-RIPE
+tech-c:         DUMY-RIPE
+status:         ASSIGNED PA
+mnt-by:         AS5089-MNT
+created:        2003-04-17T12:25:21Z
+last-modified:  2012-03-01T14:13:18Z
+source:         RIPE #
+remarks:        ****************************
+remarks:        * THIS OBJECT IS MODIFIED`
 
 	reader := NewReader(strings.NewReader(rpsl))
 
@@ -90,5 +104,16 @@ source:        LEVEL3
 	} else if len(object.Values["source"]) != 1 ||
 		object.Values["source"][0] != "LEVEL3" {
 		t.Errorf("Expected 'LEVEL3', got %v", object.Values["source"])
+	}
+
+	if object, err := reader.Read(); err != nil {
+		t.Errorf("Read inetnum: %s", err)
+	} else if object == nil {
+		t.Errorf("No inetnum returned")
+	} else if object.Class != "inetnum" {
+		t.Errorf("Expected class of `inetnum`, got %v", object.Class)
+	} else if len(object.Values["source"]) != 1 ||
+		object.Values["source"][0] != "RIPE " { //yep
+		t.Errorf("Expected 'RIPE ', got %v", object.Values["source"])
 	}
 }
