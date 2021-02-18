@@ -211,6 +211,9 @@ func lexValue(l *lexer) stateFn {
 			if !started {
 				l.discard()
 			}
+		case '%', '#':
+			l.discard()
+			return lexComment
 		case '\n':
 			l.discard()
 			l.emit(Value)

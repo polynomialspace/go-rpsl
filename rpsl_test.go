@@ -23,7 +23,7 @@ source:      RADB`
 		t.Fatalf("Read: %s", err)
 	}
 	if object.Class != "route" {
-		t.Errorf("expected route, got %t", object.Class)
+		t.Errorf("expected route, got %v", object.Class)
 	}
 	if l := len(object.Values["descr"]); l != 5 {
 		t.Errorf("expected 5 descr lines, got %d", l)
@@ -65,5 +65,30 @@ origin: AS123`
 		t.Errorf("expected EOF")
 	} else if object != nil {
 		t.Errorf("expected nil Object")
+	}
+}
+
+func TestWeirdComments(t *testing.T) {
+	var rpsl = `route:         209.120.192.0/24
+descr:         Yipes Communications Inc
+origin:        AS6517
+remarks:       MIA-VisionLab-NET
+notify:        Peering@yipes.com
+mnt-by:        MAINT-AS6517
+changed:       dlim@yipes.com 20011011
+source:        LEVEL3
+               #delete:       juhlson@yipes.com no longer yipes customer`
+
+	reader := NewReader(strings.NewReader(rpsl))
+
+	if object, err := reader.Read(); err != nil {
+		t.Errorf("Read route: %s", err)
+	} else if object == nil {
+		t.Errorf("No route returned")
+	} else if object.Class != "route" {
+		t.Errorf("Expected class of `aut-num`, got %v", object.Class)
+	} else if len(object.Values["source"]) != 1 ||
+		object.Values["source"][0] != "LEVEL3" {
+		t.Errorf("Expected 'LEVEL3', got %v", object.Values["source"])
 	}
 }
