@@ -201,6 +201,9 @@ func lexValue(l *lexer) stateFn {
 	for {
 		c, err := l.next()
 		if err == io.EOF {
+			if started {
+				l.emit(Value)
+			}
 			return nil
 		} else if err != nil {
 			panic(err)
