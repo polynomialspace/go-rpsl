@@ -1,12 +1,12 @@
 package main
 
 import (
+	"compress/gzip"
 	"flag"
 	"io"
-	"compress/gzip"
 	"os"
 
-	"github.com/martinolsen/go-rpsl"
+	"github.com/polynomialspace/go-rpsl"
 )
 
 func main() {
