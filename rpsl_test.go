@@ -68,6 +68,24 @@ origin: AS123`
 	}
 }
 
+func TestComments(t *testing.T) {
+	var rpsl = `#
+# The contents of this file are subject to 
+# AFRINIC Database Terms and Conditions
+#
+# http://www.afrinic.net/en/services
+#`
+
+	reader := NewReader(strings.NewReader(rpsl))
+
+	object, err := reader.Read()
+	if err != io.EOF {
+		t.Errorf("Read comment: %s", err)
+	} else if object != nil {
+		t.Errorf("Expected nil object, got: %v", object)
+	}
+}
+
 func TestWeirdComments(t *testing.T) {
 	var rpsl = `route:         209.120.192.0/24
 descr:         Yipes Communications Inc

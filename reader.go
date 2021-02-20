@@ -149,6 +149,9 @@ func lexNewline(l *lexer) stateFn {
 		case ' ', '\t', '+':
 			l.discard()
 			return lexValue
+		case '%', '#':
+			l.discard()
+			return lexComment
 		default:
 			return lexKey
 		}
