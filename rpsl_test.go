@@ -109,7 +109,13 @@ created:        2003-04-17T12:25:21Z
 last-modified:  2012-03-01T14:13:18Z
 source:         RIPE #
 remarks:        ****************************
-remarks:        * THIS OBJECT IS MODIFIED`
+remarks:        * THIS OBJECT IS MODIFIED
+
+as-set:         AS-COFRACTAL
+descr:          Cofractal, Inc.
+remarks:        Customer ASN(s) for #2595510-56fa56ea-2a2b-4a79-b38b-cc8c24ad71d9
+members:        AS17080
+`
 
 	reader := NewReader(strings.NewReader(rpsl))
 
@@ -133,5 +139,13 @@ remarks:        * THIS OBJECT IS MODIFIED`
 	} else if len(object.Values["source"]) != 1 ||
 		object.Values["source"][0] != "RIPE " { //yep
 		t.Errorf("Expected 'RIPE ', got %v", object.Values["source"])
+	}
+
+	if object, err := reader.Read(); err != nil {
+		t.Errorf("Read as-set: %s", err)
+	} else if object == nil {
+		t.Errorf("No as-set returned")
+	} else if object.Values["remarks"][0] != "Customer ASN(s) for #2595510-56fa56ea-2a2b-4a79-b38b-cc8c24ad71d9" {
+		t.Errorf("ugh comments, got %v", object.Values["remarks"][0])
 	}
 }

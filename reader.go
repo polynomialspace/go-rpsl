@@ -54,6 +54,7 @@ func (r *Reader) Read() (*Object, error) {
 type lexer struct {
 	C    chan item
 	buf  *bufio.Reader
+	key  string
 	text []byte
 }
 
@@ -106,6 +107,11 @@ func (l *lexer) emit(t itemType) {
 	l.C <- item{
 		Type: t,
 		Text: string(l.text),
+	}
+	if t == Key {
+		l.key = string(l.text)
+	} else {
+		l.key = ""
 	}
 	l.text = nil
 }
@@ -222,11 +228,13 @@ func lexValue(l *lexer) stateFn {
 			l.emit(Value)
 			return lexNewline
 		case '%', '#':
-			l.discard()
-			if started {
-				l.emit(Value)
+			if l.key != "remarks" {
+				l.discard()
+				if started {
+					l.emit(Value)
+				}
+				return lexComment
 			}
-			return lexComment
 		default:
 			started = true
 		}
